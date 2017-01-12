@@ -1,4 +1,4 @@
-package robot;
+package org.usfirst.frc.team1245.robot;
 
 /**
  * The robot.RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -19,11 +19,11 @@ public class RobotMap {
     
     // Talon SR channels
     public static final int frontLeft = 0;
-	public static final int rearLeft = 1;
-	public static final int frontRight = 2;
-	public static final int rearRight = 3;
-	
-	// Deadzones for rotation and translation for the drivetrain
-	public static final double translationalDeadZone = 0.1;
-	public static final double rotationalDeadZone = 0.1;
+    public static final int rearLeft = 1;
+    public static final int frontRight = 2;
+    public static final int rearRight = 3;
+    
+    // Deadzones for rotation and translation for the drivetrain
+    public static final double translationalDeadZone = 0.1;
+    public static final double rotationalDeadZone = 0.1;
 }

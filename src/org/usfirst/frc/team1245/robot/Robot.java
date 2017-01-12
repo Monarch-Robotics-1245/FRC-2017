@@ -1,13 +1,11 @@
-package robot;
+package org.usfirst.frc.team1245.robot;
+
+import org.usfirst.frc.team1245.robot.subsystems.Drivetrain;
+import org.usfirst.frc.team1245.robot.subsystems.RegularDrivetrain;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import robot.commands.MecanumDrive;
-import robot.subsystems.Drivetrain;
-import robot.subsystems.RegularDrivetrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -18,7 +16,7 @@ import robot.subsystems.RegularDrivetrain;
  */
 public class Robot extends IterativeRobot {
 
-	public static OI oi;
+    public static OI oi;
     public static Drivetrain drivetrain;
 
     /**
@@ -26,14 +24,14 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-		oi = new OI();
+        oi = new OI();
         drivetrain = new RegularDrivetrain(RobotMap.frontLeft, RobotMap.rearLeft, RobotMap.frontRight, RobotMap.rearRight);//fl, rl, fr, rr
         // instantiate the command used for the autonomous period
     }
-	
-	public void disabledPeriodic() {
-		Scheduler.getInstance().run();
-	}
+    
+    public void disabledPeriodic() {
+        Scheduler.getInstance().run();
+    }
 
     public void autonomousInit() {
 
@@ -47,7 +45,7 @@ public class Robot extends IterativeRobot {
     }
 
     public void teleopInit() {
-		// This makes sure that the autonomous stops running when
+        // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to 
         // continue until interrupted by another command, remove
         // this line or comment it out.

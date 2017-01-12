@@ -1,10 +1,11 @@
 // Drivetrain that uses Talon SR's
 
-package robot.subsystems;
+package org.usfirst.frc.team1245.robot.subsystems;
+
+import org.usfirst.frc.team1245.robot.commands.MecanumDrive;
 
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Talon;
-import robot.commands.MecanumDrive;
 
 
 /**

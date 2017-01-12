@@ -1,8 +1,6 @@
-package robot;
+package org.usfirst.frc.team1245.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -35,28 +33,28 @@ public class OI {
     // Start the command when the button is released  and let it run the command
     // until it is finished as determined by it's isFinished method.
     // button.whenReleased(new ExampleCommand());
-	
+    
     // Two joysticks
     public static Joystick driverJoystick;
-	public static Joystick secondaryJoystick;
-	
-	// Dead zone function
-	public static double deadZone(double val, double deadZone) {
-		// Return a new percentage based on the living zone
-	    if(Math.abs(val) > deadZone) {
-			if(val > 0) {
-				return (val - deadZone) / (1 - deadZone);
-			} else {
-				return -(-val - deadZone) / (1 - deadZone);
-			}
-		}
-		return 0;
-	}
-	
-	public OI() {
-	    // Initialize joysticks
-		driverJoystick = new Joystick(0);
-		secondaryJoystick = new Joystick(1);
-	}
+    public static Joystick secondaryJoystick;
+    
+    // Dead zone function
+    public static double deadZone(double val, double deadZone) {
+        // Return a new percentage based on the living zone
+        if(Math.abs(val) > deadZone) {
+            if(val > 0) {
+                return (val - deadZone) / (1 - deadZone);
+            } else {
+                return -(-val - deadZone) / (1 - deadZone);
+            }
+        }
+        return 0;
+    }
+    
+    public OI() {
+        // Initialize joysticks
+        driverJoystick = new Joystick(0);
+        secondaryJoystick = new Joystick(1);
+    }
 }
 
