@@ -1,6 +1,9 @@
 package org.usfirst.frc.team1245.robot;
 
+import edu.wpi.first.wpilibj.GamepadBase;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -35,8 +38,16 @@ public class OI {
     // button.whenReleased(new ExampleCommand());
     
     // Two joysticks
+    public static XboxController driverPad;
     public static Joystick driverJoystick;
-    public static Joystick secondaryJoystick;
+    public static Joystick gunnerJoystick;
+    
+    public OI() {
+        // Initialize joysticks
+        driverPad = new XboxController(0);
+        driverJoystick = new Joystick(0);
+        gunnerJoystick = new Joystick(1);
+    }
     
     // Dead zone function
     public static double deadZone(double val, double deadZone) {
@@ -49,12 +60,6 @@ public class OI {
             }
         }
         return 0;
-    }
-    
-    public OI() {
-        // Initialize joysticks
-        driverJoystick = new Joystick(0);
-        secondaryJoystick = new Joystick(1);
     }
 }
 

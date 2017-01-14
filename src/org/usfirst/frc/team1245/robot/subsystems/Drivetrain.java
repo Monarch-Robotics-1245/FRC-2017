@@ -1,29 +1,56 @@
 package org.usfirst.frc.team1245.robot.subsystems;
 // Base Drivetrain class
 
+import org.usfirst.frc.team1245.robot.commands.MecanumDrive;
+
+import com.ctre.CANTalon;
+
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.RobotDrive.MotorType;
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
-public abstract class Drivetrain extends Subsystem {
+public class Drivetrain extends Subsystem {
     
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
     
     // RobotDrive object for access to FIRST's mecanum drive method
     protected RobotDrive robotDrive;
-    
-    // Mecanum drive will be used, so four speed controllers are necessary
-    protected SpeedController tFrontLeft;
-    protected SpeedController tRearLeft;
-    protected SpeedController tFrontRight;
-    protected SpeedController tRearRight;
+
+    // Creating the CANTalons
+    public CANTalon frontLeft, frontRight, rearLeft, rearRight;
+
+    public Gyro gyro;
+    private Timer timer;
+    public Drivetrain(int frontLeft, int frontRight, int rearLeft, int rearRight, int gyroChannel){
+        // Initializing the CANTalons
+        this.frontLeft = new CANTalon(frontLeft);
+        this.frontRight = new CANTalon(frontRight);
+        this.rearLeft = new CANTalon(rearLeft);
+        this.rearRight = new CANTalon(rearRight);
+        gyro = new AnalogGyro(gyroChannel);
+        timer = new Timer();
+        timer.start();
+        robotDrive = new RobotDrive(this.frontLeft, this.rearLeft, this.frontRight, this.rearRight);
+        robotDrive.setInvertedMotor(MotorType.kFrontRight, true);
+        robotDrive.setInvertedMotor(MotorType.kRearRight, true);
+    }
 
     // Method to be implemented in base classes
-    public abstract void initDefaultCommand();
+    public void initDefaultCommand(){
+     // Set the default command for a subsystem here.
+        //setDefaultCommand(new MySpecialCommand());
+        setDefaultCommand(new MecanumDrive());
+    }
     
     // Return the RobotDrive object
     public RobotDrive getDrivetrain() {
@@ -32,19 +59,19 @@ public abstract class Drivetrain extends Subsystem {
     
     // Return a specific speed motor in the following four methods
     public SpeedController getFrontLeft() {
-        return tFrontLeft;
+        return frontLeft;
     }
     
     public SpeedController getRearLeft() {
-        return tRearLeft;
+        return rearLeft;
     }
     
     public SpeedController getFrontRight() {
-        return tFrontRight;
+        return frontRight;
     }
     
     public SpeedController getRearRight() {
-        return tRearRight;
+        return rearRight;
     }
 }
 

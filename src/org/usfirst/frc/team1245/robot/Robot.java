@@ -1,8 +1,15 @@
 package org.usfirst.frc.team1245.robot;
 
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team1245.robot.subsystems.Drivetrain;
-import org.usfirst.frc.team1245.robot.subsystems.RegularDrivetrain;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -17,16 +24,35 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 public class Robot extends IterativeRobot {
 
     public static OI oi;
-    public static Drivetrain drivetrain;
+    public static Drivetrain drivetrain = new Drivetrain(RobotMap.frontLeft, RobotMap.rearLeft, 
+                                                         RobotMap.frontRight, RobotMap.rearRight, 
+                                                         RobotMap.gyroChannel);
 
+    
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
         oi = new OI();
-        drivetrain = new RegularDrivetrain(RobotMap.frontLeft, RobotMap.rearLeft, RobotMap.frontRight, RobotMap.rearRight);//fl, rl, fr, rr
-        // instantiate the command used for the autonomous period
+        Robot.drivetrain.gyro.calibrate();
+        //Camera        
+        new Thread(() -> {
+            UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+            camera.setVideoMode(PixelFormat.kMJPEG, 320, 240, 30);
+            
+            CvSink cvSink = CameraServer.getInstance().getVideo();
+            CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
+            
+            Mat source = new Mat();
+            Mat output = new Mat();
+            
+            while(true) {
+                cvSink.grabFrame(source);
+                Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
+                outputStream.putFrame(output);
+            }
+        }).start();
     }
     
     public void disabledPeriodic() {

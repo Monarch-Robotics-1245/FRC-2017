@@ -17,11 +17,18 @@ public class RobotMap {
     // public static int rangefinderPort = 1;
     // public static int rangefinderModule = 1;
     
-    // Talon SR channels
-    public static final int frontLeft = 0;
-    public static final int rearLeft = 1;
-    public static final int frontRight = 2;
-    public static final int rearRight = 3;
+    // Talon SRX channels
+    public static final int frontLeft = 6;
+    public static final int rearLeft = 3;
+    public static final int frontRight = 5;
+    public static final int rearRight = 4;
+    
+    // Sensors
+    public static final int gyroChannel = 0;
+    
+    // Control buttons
+    public static final int fireButton = 1;
+    public static final int overrideButton = 2;
     
     // Deadzones for rotation and translation for the drivetrain
     public static final double translationalDeadZone = 0.1;
