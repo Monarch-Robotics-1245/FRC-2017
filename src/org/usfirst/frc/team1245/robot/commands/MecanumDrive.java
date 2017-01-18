@@ -28,14 +28,20 @@ public class MecanumDrive extends Command {
         
     }
 
+    double speedScale = 1.0;
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-
+        if(OI.driverPad.getBumper(Hand.kLeft)){
+            speedScale = .35;
+        }else{
+            speedScale = 1.0;
+        }
+        
         // Get joystick input and filter it through the dead zone function
-        // HACK: Temporarily swapped x and y to compensate for differences in gamepad and joystick mapping
-        double y = -OI.deadZone(OI.driverPad.getX(Hand.kLeft), RobotMap.translationalDeadZone);
-        double x = -OI.deadZone(OI.driverPad.getY(Hand.kLeft), RobotMap.translationalDeadZone);
-        double twist = OI.deadZone(OI.driverPad.getX(Hand.kRight), RobotMap.rotationalDeadZone) + OI.deadZone(OI.driverJoystick.getTwist(), RobotMap.rotationalDeadZone);
+        // HACK: FIX FOR FINAL ROBOT VERSION
+        double y = OI.scaleSpeed(-OI.deadZone(OI.driverPad.getX(Hand.kLeft), RobotMap.translationalDeadZone), speedScale);
+        double x = OI.scaleSpeed(-OI.deadZone(OI.driverPad.getY(Hand.kLeft), RobotMap.translationalDeadZone), speedScale);
+        double twist = OI.scaleSpeed(OI.deadZone(OI.driverPad.getX(Hand.kRight), RobotMap.rotationalDeadZone) + OI.deadZone(OI.driverJoystick.getTwist(), RobotMap.rotationalDeadZone), speedScale);
         
         // Drive the robot based on the user input
         Robot.drivetrain.getDrivetrain().mecanumDrive_Cartesian(x, y, twist, 0);
@@ -43,6 +49,7 @@ public class MecanumDrive extends Command {
         // Write the drive parameters to Smartdashboard
         SmartDashboard.putNumber("X", x);
         SmartDashboard.putNumber("Y", y);
+        SmartDashboard.putNumber("Speed", speedScale);
         SmartDashboard.putNumber("Twist", twist);
     }
 

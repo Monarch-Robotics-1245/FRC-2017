@@ -23,10 +23,17 @@ public class RobotMap {
     public static final int frontRight = 5;
     public static final int rearRight = 4;
     
+    //Turret Channels
+    public static final int rotation = 0;
+    public static final int pitch = 0;
+    public static final int shooter = 0;
+    public static final int loader = 0;
+    
     // Sensors
     public static final int gyroChannel = 0;
     
     // Control buttons
+    public static final int speedButton = 5;
     public static final int fireButton = 1;
     public static final int overrideButton = 2;
     

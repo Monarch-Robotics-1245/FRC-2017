@@ -1,7 +1,5 @@
 package org.usfirst.frc.team1245.robot;
 
-import edu.wpi.first.wpilibj.GamepadBase;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -45,8 +43,8 @@ public class OI {
     public OI() {
         // Initialize joysticks
         driverPad = new XboxController(0);
-        driverJoystick = new Joystick(0);
-        gunnerJoystick = new Joystick(1);
+        driverJoystick = new Joystick(1);
+        gunnerJoystick = new Joystick(2);
     }
     
     // Dead zone function
@@ -60,6 +58,10 @@ public class OI {
             }
         }
         return 0;
+    }
+    
+    public static double scaleSpeed(double val, double scale){
+        return val*scale;
     }
 }
 

@@ -8,12 +8,10 @@ import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
-import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -37,6 +35,7 @@ public class Drivetrain extends Subsystem {
         this.frontRight = new CANTalon(frontRight);
         this.rearLeft = new CANTalon(rearLeft);
         this.rearRight = new CANTalon(rearRight);
+        this.rearLeft.enableBrakeMode(true);
         gyro = new AnalogGyro(gyroChannel);
         timer = new Timer();
         timer.start();
