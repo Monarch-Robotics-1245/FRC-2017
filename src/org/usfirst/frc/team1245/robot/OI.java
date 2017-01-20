@@ -43,7 +43,7 @@ public class OI {
     public OI() {
         // Initialize joysticks
         driverPad = new XboxController(0);
-        driverJoystick = new Joystick(1);
+        driverJoystick = new Joystick(0);
         gunnerJoystick = new Joystick(2);
     }
     

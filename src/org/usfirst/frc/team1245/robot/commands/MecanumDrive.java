@@ -41,7 +41,7 @@ public class MecanumDrive extends Command {
         // HACK: FIX FOR FINAL ROBOT VERSION
         double y = OI.scaleSpeed(-OI.deadZone(OI.driverPad.getX(Hand.kLeft), RobotMap.translationalDeadZone), speedScale);
         double x = OI.scaleSpeed(-OI.deadZone(OI.driverPad.getY(Hand.kLeft), RobotMap.translationalDeadZone), speedScale);
-        double twist = OI.scaleSpeed(OI.deadZone(OI.driverPad.getX(Hand.kRight), RobotMap.rotationalDeadZone) + OI.deadZone(OI.driverJoystick.getTwist(), RobotMap.rotationalDeadZone), speedScale);
+        double twist = OI.scaleSpeed(OI.deadZone(OI.driverPad.getX(Hand.kRight) + OI.driverJoystick.getTwist(), RobotMap.rotationalDeadZone), speedScale);
         
         // Drive the robot based on the user input
         Robot.drivetrain.getDrivetrain().mecanumDrive_Cartesian(x, y, twist, 0);

@@ -20,14 +20,17 @@ public class Robot extends IterativeRobot {
     public static Drivetrain drivetrain = new Drivetrain(RobotMap.frontLeft, RobotMap.rearLeft, 
                                                          RobotMap.frontRight, RobotMap.rearRight, 
                                                          RobotMap.gyroChannel);
-    public static Turret turret = new Turret(RobotMap.rotation, RobotMap.pitch, RobotMap.shooter, RobotMap.loader);
-    
+    public static Turret turret;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
         oi = new OI();
+        //Camera       
+        // Get the UsbCamera from CameraServer
+        //cameraRaw = CameraServer.getInstance().startAutomaticCapture();
+        turret = new Turret(RobotMap.rotation, RobotMap.pitch, RobotMap.shooter, RobotMap.loader);
         Robot.drivetrain.gyro.calibrate();
     }
     
