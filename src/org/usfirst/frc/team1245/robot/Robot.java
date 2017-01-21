@@ -21,6 +21,7 @@ public class Robot extends IterativeRobot {
                                                          RobotMap.frontRight, RobotMap.rearRight, 
                                                          RobotMap.gyroChannel);
     public static Turret turret;
+    public static Thread visionThread;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.

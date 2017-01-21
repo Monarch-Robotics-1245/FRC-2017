@@ -8,6 +8,7 @@ import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import org.usfirst.frc.team1245.robot.Robot;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
@@ -18,18 +19,17 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class ManualTurret extends Command {
-    private Thread visionThread;
     
     public ManualTurret() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-        //requires(Robot.turret);
-        visionThread = new Thread(() -> {
-            
+        requires(Robot.turret);
+        Robot.turret.cameraRaw.setResolution(640, 480);
+        Robot.visionThread = new Thread(() -> {
             // Get a CvSink. This will capture Mats from the camera
             CvSink cvSink = CameraServer.getInstance().getVideo();
             // Setup a CvSource. This will send images back to the Dashboard
-            CvSource outputStream = CameraServer.getInstance().putVideo("Rectangle", 640, 480);
+            CvSource outputStream = CameraServer.getInstance().putVideo("Manual", 640, 480);
          
             // Mats are very memory expensive. Lets reuse this Mat.
             Mat mat = new Mat();
@@ -65,11 +65,11 @@ public class ManualTurret extends Command {
                 Imgproc.line(mat, new Point(300, 320), new Point(340, 320), new Scalar(0, 255, 0), 2);
                 Imgproc.line(mat, new Point(310, 380), new Point(330, 380), new Scalar(0, 255, 0), 2);
                 // Give the output stream a new image to display
-                    outputStream.putFrame(mat);
+                outputStream.putFrame(mat);
             }
         });
-        visionThread.setDaemon(true);
-        visionThread.start();
+        Robot.visionThread.setDaemon(true);
+        Robot.visionThread.start();
     }
     
     public MatOfPoint pointCurve(int rad, int xCenter, int yCenter, int numPoints, int div, int degStart){
