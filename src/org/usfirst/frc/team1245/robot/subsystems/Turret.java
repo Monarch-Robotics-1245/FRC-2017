@@ -10,7 +10,7 @@ public class Turret extends Subsystem {
 
     //Relay rotation, pitch, loader;
     //Talon shooter;
-    public UsbCamera cameraRaw = CameraServer.getInstance().startAutomaticCapture("Turret", 0);;
+    public UsbCamera cameraRaw = CameraServer.getInstance().startAutomaticCapture("Turret", 0);
     
     public Turret(int rotation, int pitch, int shooter, int loader){
         // TODO Auto-generated method stub

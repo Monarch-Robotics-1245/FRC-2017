@@ -1,13 +1,17 @@
 package org.usfirst.frc.team1245.robot.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team1245.robot.OI;
 import org.usfirst.frc.team1245.robot.Robot;
 import org.usfirst.frc.team1245.robot.RobotMap;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
@@ -25,7 +29,7 @@ public class TrackTarget extends Command {
     }
     
     private void calibrate(){
-        new Thread(() -> {
+        Thread cal = new Thread(() -> {
             Robot.turret.cameraRaw.setResolution(640, 480);
             Robot.turret.cameraRaw.setWhiteBalanceAuto();
             DriverStation.reportWarning(")))Calibration Starting!(((", false);
@@ -35,9 +39,11 @@ public class TrackTarget extends Command {
                 DriverStation.reportError(e.getMessage(), true);
             }
             Robot.turret.cameraRaw.setWhiteBalanceHoldCurrent();
-            Robot.turret.cameraRaw.setExposureManual(100);
+            Robot.turret.cameraRaw.setExposureManual(20);
             DriverStation.reportWarning(")))Finished Calibration(((", false);
-        }).start();
+        });
+        cal.setDaemon(true);
+        cal.start();
     }
     
     // Called just before this Command runs the first time
@@ -56,6 +62,8 @@ public class TrackTarget extends Command {
             
             // Mats are very memory expensive. Lets reuse this Mat.
             Mat mat = new Mat();
+            List<Point> contours = new ArrayList<>();
+            Mat heir = new Mat();
             
             // The while loop cannot be always 'true'. The program will never exit if it is. This
             // lets the robot stop this thread when restarting robot code or
@@ -71,6 +79,7 @@ public class TrackTarget extends Command {
                     continue;
                 }
                 // Process Image
+                Imgproc.findContours(mat, contours, new Mat(), Imgproc.CV_RETR_LIST, Imgproc.CV_CHAIN_APPROX_SIMPLE);                
                 
                 // Give the output stream a new image to display
                 outputStream.putFrame(mat);
@@ -87,9 +96,9 @@ public class TrackTarget extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        /*if(OI.gunnerJoystick.getRawButton(RobotMap.overrideButton)){
+        if(OI.gunnerJoystick.getRawButton(RobotMap.overrideButton)){
             return true;
-        }*/
+        }
         return false;
     }
 

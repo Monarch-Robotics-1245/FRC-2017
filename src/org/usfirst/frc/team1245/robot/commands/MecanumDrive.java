@@ -28,17 +28,16 @@ public class MecanumDrive extends Command {
         
     }
 
-    double speedScale = 1.0;
+    double speedScale = .65;
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
         if(OI.driverPad.getBumper(Hand.kLeft)){
             speedScale = .35;
         }else{
-            speedScale = 1.0;
+            speedScale = .65;
         }
         
         // Get joystick input and filter it through the dead zone function
-        // HACK: FIX FOR FINAL ROBOT VERSION
         double y = OI.scaleSpeed(-OI.deadZone(OI.driverPad.getX(Hand.kLeft), RobotMap.translationalDeadZone), speedScale);
         double x = OI.scaleSpeed(-OI.deadZone(OI.driverPad.getY(Hand.kLeft), RobotMap.translationalDeadZone), speedScale);
         double twist = OI.scaleSpeed(OI.deadZone(OI.driverPad.getX(Hand.kRight) + OI.driverJoystick.getTwist(), RobotMap.rotationalDeadZone), speedScale);
@@ -47,10 +46,7 @@ public class MecanumDrive extends Command {
         Robot.drivetrain.getDrivetrain().mecanumDrive_Cartesian(x, y, twist, 0);
         
         // Write the drive parameters to Smartdashboard
-        SmartDashboard.putNumber("X", x);
-        SmartDashboard.putNumber("Y", y);
         SmartDashboard.putNumber("Speed", speedScale);
-        SmartDashboard.putNumber("Twist", twist);
     }
 
     // Make this return true when this Command no longer needs to run execute()

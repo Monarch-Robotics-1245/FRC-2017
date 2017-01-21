@@ -31,6 +31,7 @@ public class Robot extends IterativeRobot {
         // Get the UsbCamera from CameraServer
         //cameraRaw = CameraServer.getInstance().startAutomaticCapture();
         turret = new Turret(RobotMap.rotation, RobotMap.pitch, RobotMap.shooter, RobotMap.loader);
+        turret.cameraRaw.setExposureManual(50);
         Robot.drivetrain.gyro.calibrate();
     }
     
