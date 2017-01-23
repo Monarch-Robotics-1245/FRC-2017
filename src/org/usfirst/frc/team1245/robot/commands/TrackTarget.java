@@ -1,12 +1,6 @@
 package org.usfirst.frc.team1245.robot.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Point;
-import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team1245.robot.OI;
 import org.usfirst.frc.team1245.robot.Robot;
 import org.usfirst.frc.team1245.robot.RobotMap;
@@ -25,10 +19,9 @@ public class TrackTarget extends Command {
     private Thread visionThread;
     public TrackTarget() {
         // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
         requires(Robot.turret);
         /* Calibration */
-        Robot.turret.cameraRaw.setResolution(320, 240);
+        Robot.turret.cameraRaw.setResolution(640, 480);
         Robot.turret.cameraRaw.setWhiteBalanceAuto();
         DriverStation.reportWarning(")))Calibration Starting!(((", false);
         try {
@@ -37,19 +30,17 @@ public class TrackTarget extends Command {
             DriverStation.reportError(e.getMessage(), true);
         }
         Robot.turret.cameraRaw.setWhiteBalanceHoldCurrent();
-        //Robot.turret.cameraRaw.setExposureManual(15);
+        Robot.turret.cameraRaw.setExposureManual(30);
         DriverStation.reportWarning(")))Finished Calibration(((", false);
        Robot.visionThread = new Thread(() -> {
            
            // Get a CvSink. This will capture Mats from the camera
            CvSink cvSink = CameraServer.getInstance().getVideo();
            // Setup a CvSource. This will send images back to the Dashboard
-           CvSource outputStream = CameraServer.getInstance().putVideo("Tracking", 320, 240);
+           CvSource outputStream = CameraServer.getInstance().putVideo("Tracking", 640, 480);
            
            // Mats are very memory expensive. Lets reuse this Mat.
            Mat mat = new Mat();
-           Mat dst = new Mat();
-           List<MatOfPoint> contours = new ArrayList<>();
            //Mat heir = new Mat();
            //Scalar green = new Scalar(0, 255, 0);
            
@@ -66,7 +57,7 @@ public class TrackTarget extends Command {
                    // skip the rest of the current iteration
                    continue;
                }
-
+               DriverStation.reportWarning("Mat: " + mat.toString(), false);
                // Process Image
                //Imgproc.cvtColor(mat, dst, Imgproc.COLOR_BGR2HSV);
                //Imgproc.findContours(dst, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
@@ -76,7 +67,7 @@ public class TrackTarget extends Command {
                
                DriverStation.reportWarning(")))Processing - Finished(((", false);                
                // Give the output stream a new image to display
-               outputStream.putFrame(dst);
+               outputStream.putFrame(mat);
            }
        });
        Robot.visionThread.setDaemon(true);
