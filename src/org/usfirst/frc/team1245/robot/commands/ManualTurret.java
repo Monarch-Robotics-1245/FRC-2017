@@ -8,11 +8,15 @@ import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import org.usfirst.frc.team1245.robot.OI;
 import org.usfirst.frc.team1245.robot.Robot;
+import org.usfirst.frc.team1245.robot.RobotMap;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -94,7 +98,37 @@ public class ManualTurret extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+        double rotate = OI.deadZone(OI.gunnerJoystick.getTwist(), RobotMap.turretDeadZone);
+        if(rotate > 0){
+            Robot.turret.rotation.set(Relay.Value.kForward);
+        }
+        else if(rotate < 0){
+            Robot.turret.rotation.set(Relay.Value.kReverse);
+        }
+        else {
+            Robot.turret.rotation.set(Relay.Value.kOff);
+        }
         
+        double pitch = OI.deadZone(OI.gunnerJoystick.getAxis(Joystick.AxisType.kY), RobotMap.turretDeadZone);
+        if(pitch > 0){
+            Robot.turret.pitch.set(Relay.Value.kForward);
+        }
+        else if(pitch <0){
+            Robot.turret.pitch.set(Relay.Value.kReverse);
+        }
+        else{
+            Robot.turret.pitch.set(Relay.Value.kOff);
+        }
+        
+        Robot.turret.shooter.set(OI.deadZone(OI.gunnerJoystick.getMagnitude(), RobotMap.turretDeadZone));
+        
+        boolean triggered = OI.gunnerJoystick.getButton(Joystick.ButtonType.kTrigger);
+        if (triggered){
+            Robot.turret.loader.set(1.0);
+        }
+        else {
+            Robot.turret.loader.set(0.0);
+        }
     }
 
     // Make this return true when this Command no longer needs to run execute()

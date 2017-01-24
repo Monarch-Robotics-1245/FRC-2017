@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1245.robot;
 
 import org.usfirst.frc.team1245.robot.subsystems.Drivetrain;
+import org.usfirst.frc.team1245.robot.subsystems.Scalar;
 import org.usfirst.frc.team1245.robot.subsystems.Turret;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -22,6 +23,7 @@ public class Robot extends IterativeRobot {
                                                          RobotMap.gyroChannel);
     public static Turret turret;
     public static Thread visionThread;
+    public static Scalar scalar;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.

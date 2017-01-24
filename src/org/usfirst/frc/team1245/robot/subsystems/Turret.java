@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Turret extends Subsystem {
 
-    public Relay rotation, pitch;
+    public Relay rotation, pitch; //some of these may end up being Victors, but that will be really easy to change.
     public Victor shooter, loader;
     public UsbCamera cameraRaw = CameraServer.getInstance().startAutomaticCapture("Turret", 0);
     
