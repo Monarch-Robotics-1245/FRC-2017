@@ -5,7 +5,6 @@ import org.usfirst.frc.team1245.robot.commands.TrackTarget;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -21,7 +20,6 @@ public class Turret extends Subsystem {
         this.pitch = new Relay(pitch);
         this.loader = new Victor(loader);
         this.shooter = new Victor(shooter);
-        this.rotation.set(Value.kOff);
     }
     
     @Override

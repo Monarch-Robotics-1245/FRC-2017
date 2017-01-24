@@ -25,9 +25,9 @@ public class RobotMap {
     
     //Turret Channels
     public static final int rotation = 0;
-    public static final int pitch = 0;
-    public static final int shooter = 0;
-    public static final int loader = 0;
+    public static final int pitch = 1;
+    public static final int shooter = 3;
+    public static final int loader = 2;
     
     // Sensors
     public static final int gyroChannel = 0;
@@ -38,6 +38,7 @@ public class RobotMap {
     public static final int overrideButton = 2;
     
     // Deadzones for rotation and translation for the drivetrain
+    public static final double turretDeadZone = .1;
     public static final double translationalDeadZone = 0.1;
     public static final double rotationalDeadZone = 0.1;
 }

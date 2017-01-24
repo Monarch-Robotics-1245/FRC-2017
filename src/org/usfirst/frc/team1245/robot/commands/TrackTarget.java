@@ -1,6 +1,9 @@
 package org.usfirst.frc.team1245.robot.commands;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team1245.robot.OI;
 import org.usfirst.frc.team1245.robot.Robot;
 import org.usfirst.frc.team1245.robot.RobotMap;
@@ -41,12 +44,18 @@ public class TrackTarget extends Command {
            
            // Mats are very memory expensive. Lets reuse this Mat.
            Mat mat = new Mat();
+           Mat cvt = new Mat();
            //Mat heir = new Mat();
            //Scalar green = new Scalar(0, 255, 0);
            
            // The while loop cannot be always 'true'. The program will never exit if it is. This
            // lets the robot stop this thread when restarting robot code or
            // deploying.
+           
+           int r = 0;
+           int g = 0;
+           int b = 0;
+           int i = 0;
            
            while (!Thread.interrupted()) {
                // Tell the CvSink to grab a frame from the camera and put it
@@ -57,7 +66,17 @@ public class TrackTarget extends Command {
                    // skip the rest of the current iteration
                    continue;
                }
-               DriverStation.reportWarning("Mat: " + mat.toString(), false);
+               //Imgproc.cvtColor(mat, cvt, Imgproc.COLOR_BGR2HLS);
+               Core.inRange(mat, new Scalar(r, g, b, 0), new Scalar(255, 255, 255, 255), cvt);
+               ++i;
+               if((i % 2) == 0){
+                   ++b;
+               }
+               if ((i % 3) == 0){
+                   ++r;
+               }
+               ++g;
+               //DriverStation.reportWarning("Mat: " + mat.type(), false);
                // Process Image
                //Imgproc.cvtColor(mat, dst, Imgproc.COLOR_BGR2HSV);
                //Imgproc.findContours(dst, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
@@ -67,7 +86,7 @@ public class TrackTarget extends Command {
                
                DriverStation.reportWarning(")))Processing - Finished(((", false);                
                // Give the output stream a new image to display
-               outputStream.putFrame(mat);
+               outputStream.putFrame(cvt);
            }
        });
        Robot.visionThread.setDaemon(true);
