@@ -61,7 +61,7 @@ public class TrackTarget extends Command {
            int rr = 255;
            int gg = 255;
            int bb = 100;
-           double[] curColor = new double[3];
+           double[] curColor;
            
            while (!Thread.interrupted()) {
                // Tell the CvSink to grab a frame from the camera and put it
@@ -114,10 +114,10 @@ public class TrackTarget extends Command {
                SmartDashboard.putNumber("BB: ", bb);
                //DriverStation.reportWarning("Mat: " + mat.type(), false);
                // Process Image
-               int largeHMax = 0;
                int largeHCur = 0;
-               int smallHMax = 0;
                int smallHCur = 0;
+               int avgL = 0, iL = 0;
+               int avgS = 0, iS = 0;
                
                int state = 0; //0 = top, 1 = large, 2 = middle, 3 = small,
                for(int i = 0; i < cvt.cols(); i+=3){
@@ -127,8 +127,6 @@ public class TrackTarget extends Command {
                        case 0:
                            if(curColor[0] > 127){
                                state = 1;
-                           }else{
-                               
                            }
                            break;
                        case 1:
@@ -137,6 +135,8 @@ public class TrackTarget extends Command {
                            }else{
                                if(largeHCur > 5){
                                    state = 2;
+                                   avgL+=largeHCur;
+                                   ++iS;
                                }else{
                                    largeHCur = 0;
                                    state = 0;
@@ -147,25 +147,15 @@ public class TrackTarget extends Command {
                            if(curColor[0] > 127){
                                ++smallHCur;
                                state = 3;
-                           }else{
-                               if(largeHCur > 5){
-                                   state = 2;
-                                   if(largeHCur > largeHMax){
-                                       largeHMax = largeHCur;
-                                       largeHCur = 0;
-                                   }
-                               }else{
-                                   largeHCur = 0;
-                                   state = 0;
-                               }
                            }
                            break;
                        case 3:
                            if(curColor[0] > 127){
                                ++smallHCur;
                            }else{
-                               if(smallHCur > smallHMax){
-                                   smallHMax = smallHCur;
+                               if(smallHCur > 4){
+                                   avgS += smallHCur;
+                                   ++iS;
                                    smallHCur = 0;
                                }
                                state = 0;
@@ -174,15 +164,13 @@ public class TrackTarget extends Command {
                            }
                            break;
                        default:
-                           i += 3;
-                           j = 0;
                            state = 0;
                            break;
                        }
                    }
                }
-               SmartDashboard.putNumber("Large H: ", largeHMax);
-               SmartDashboard.putNumber("Small H: ", smallHMax);
+               SmartDashboard.putNumber("Large H: ", avgL/iL);
+               SmartDashboard.putNumber("Small H: ", avgS/iS);
                SmartDashboard.putNumber("Mat H: ", cvt.rows());
                // Give the output stream a new image to display
                outputStream.putFrame(cvt);
