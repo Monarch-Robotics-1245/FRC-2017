@@ -2,6 +2,7 @@ package org.usfirst.frc.team1245.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -39,12 +40,14 @@ public class OI {
     public static XboxController driverPad;
     public static Joystick driverJoystick;
     public static Joystick gunnerJoystick;
+    public static JoystickButton driverAButton;
     
     public OI() {
         // Initialize joysticks
         driverPad = new XboxController(0);
         driverJoystick = new Joystick(0);
         gunnerJoystick = new Joystick(2);
+        driverAButton = new JoystickButton(driverPad,1);
     }
     
     // Dead zone function
