@@ -1,5 +1,9 @@
 package org.usfirst.frc.team1245.robot;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.first.wpilibj.CameraServer;
+
 /**
  * The robot.RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -16,12 +20,17 @@ public class RobotMap {
     // number and the module. For example you with a rangefinder:
     // public static int rangefinderPort = 1;
     // public static int rangefinderModule = 1;
+
+    // Get a CvSink. This will capture Mats from the camera
+    public static CvSink cvSink = CameraServer.getInstance().getVideo();
+    // Setup a CvSource. This will send images back to the Dashboard
+    public static CvSource outputStream = CameraServer.getInstance().putVideo("Tracking", 640, 480);
     
     // Talon SRX channels
-    public static final int frontLeft = 6;
-    public static final int rearLeft = 3;
-    public static final int frontRight = 5;
-    public static final int rearRight = 4;
+    public static final int frontLeft = 3;
+    public static final int rearLeft = 2;
+    public static final int frontRight = 4;
+    public static final int rearRight = 1;
     
     //Turret Channels
     public static final int rotation = 0;

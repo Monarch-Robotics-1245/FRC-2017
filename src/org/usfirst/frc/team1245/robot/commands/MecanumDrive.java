@@ -28,13 +28,13 @@ public class MecanumDrive extends Command {
         
     }
 
-    double speedScale = .65;
+    double speedScale = 1.0;
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
         if(OI.driverPad.getBumper(Hand.kLeft)){
-            speedScale = .35;
+            speedScale = .90;
         }else{
-            speedScale = .65;
+            speedScale = 1.0;
         }
         
         // Get joystick input and filter it through the dead zone function

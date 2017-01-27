@@ -3,18 +3,12 @@ package org.usfirst.frc.team1245.robot.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team1245.robot.OI;
 import org.usfirst.frc.team1245.robot.Robot;
 import org.usfirst.frc.team1245.robot.RobotMap;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.command.Command;
@@ -28,7 +22,7 @@ public class ManualTurret extends Command {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
         requires(Robot.turret);
-        Robot.turret.cameraRaw.setResolution(640, 480);
+        /*Robot.turret.cameraRaw.setResolution(640, 480);
         Robot.visionThread = new Thread(() -> {
             // Get a CvSink. This will capture Mats from the camera
             CvSink cvSink = CameraServer.getInstance().getVideo();
@@ -73,7 +67,7 @@ public class ManualTurret extends Command {
             }
         });
         Robot.visionThread.setDaemon(true);
-        Robot.visionThread.start();
+        Robot.visionThread.start();*/
     }
     
     public MatOfPoint pointCurve(int rad, int xCenter, int yCenter, int numPoints, int div, int degStart){
@@ -98,6 +92,7 @@ public class ManualTurret extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+        Robot.visionState = 2;
         double rotate = OI.deadZone(OI.gunnerJoystick.getTwist(), RobotMap.turretDeadZone);
         if(rotate > 0){
             Robot.turret.rotation.set(Relay.Value.kForward);
