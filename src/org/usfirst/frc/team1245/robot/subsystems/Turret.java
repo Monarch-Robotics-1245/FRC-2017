@@ -21,7 +21,7 @@ public class Turret extends Subsystem {
     
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(new TrackTarget());
+        //setDefaultCommand(new TrackTarget());
     }
 
 }

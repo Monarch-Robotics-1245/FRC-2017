@@ -21,10 +21,8 @@ public class RobotMap {
     // public static int rangefinderPort = 1;
     // public static int rangefinderModule = 1;
 
-    // Get a CvSink. This will capture Mats from the camera
-    public static CvSink cvSink = CameraServer.getInstance().getVideo();
     // Setup a CvSource. This will send images back to the Dashboard
-    public static CvSource outputStream = CameraServer.getInstance().putVideo("Tracking", 640, 480);
+    public static CvSource outputStream = CameraServer.getInstance().putVideo("Tracking", 320, 240);
     
     // Talon SRX channels
     public static final int frontLeft = 3;

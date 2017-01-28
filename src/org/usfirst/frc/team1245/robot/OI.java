@@ -36,6 +36,11 @@ public class OI {
     // until it is finished as determined by it's isFinished method.
     // button.whenReleased(new ExampleCommand());
     
+    public static boolean bWasPressed = false;
+    public static boolean xWasPressed = false;
+    public static boolean yWasPressed = false;
+    public static boolean aWasPressed = false;    
+    
     // Two joysticks
     public static XboxController driverPad;
     public static Joystick driverJoystick;
