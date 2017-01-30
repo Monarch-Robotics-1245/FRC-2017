@@ -22,7 +22,7 @@ public class RobotMap {
     // public static int rangefinderModule = 1;
 
     // Setup a CvSource. This will send images back to the Dashboard
-    public static CvSource outputStream = CameraServer.getInstance().putVideo("Tracking", 320, 240);
+    public static CvSource outputStream;
     
     // Talon SRX channels
     public static final int frontLeft = 3;

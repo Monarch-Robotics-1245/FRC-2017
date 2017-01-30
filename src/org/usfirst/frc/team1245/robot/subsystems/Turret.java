@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1245.robot.subsystems;
 
-import org.usfirst.frc.team1245.robot.commands.TrackTarget;
+import org.usfirst.frc.team1245.robot.commands.TurretSleep;
 
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Victor;
@@ -12,7 +12,6 @@ public class Turret extends Subsystem {
     public Victor shooter, loader;
     
     public Turret(int rotation, int pitch, int shooter, int loader){
-        // TODO Auto-generated method stub
         this.rotation = new Relay(rotation);
         this.pitch = new Relay(pitch);
         this.loader = new Victor(loader);
@@ -21,7 +20,7 @@ public class Turret extends Subsystem {
     
     @Override
     protected void initDefaultCommand() {
-        //setDefaultCommand(new TrackTarget());
+        setDefaultCommand(new TurretSleep());
     }
 
 }

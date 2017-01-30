@@ -59,6 +59,8 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
         oi = new OI();
+        mat = new Mat();
+        cvt = new Mat();
         //Camera
         turretCameraRaw = CameraServer.getInstance().startAutomaticCapture("Turret", 0);
         // Get the UsbCamera from CameraServer
@@ -68,6 +70,7 @@ public class Robot extends IterativeRobot {
         turretCameraRaw.setResolution(320, 240);
         drivetrain.gyro.calibrate();
         cvSink = CameraServer.getInstance().getVideo();
+        RobotMap.outputStream = CameraServer.getInstance().putVideo("Tracking", 320, 240);
         visionThread = new Thread(() -> {
             while(!Thread.interrupted()){
                 switch(visionState){
