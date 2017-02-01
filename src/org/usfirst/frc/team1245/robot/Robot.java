@@ -8,10 +8,12 @@ import org.usfirst.frc.team1245.robot.subsystems.RopeScalar;
 import org.usfirst.frc.team1245.robot.subsystems.Turret;
 
 import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -30,8 +32,8 @@ public class Robot extends IterativeRobot {
     public static Drivetrain drivetrain = new Drivetrain(RobotMap.frontLeft, RobotMap.rearLeft, 
                                                          RobotMap.frontRight, RobotMap.rearRight, 
                                                          RobotMap.gyroChannel);
-    public static Turret turret;
-    public static RopeScalar scalar;
+    public static Turret turret = new Turret(RobotMap.rotation, RobotMap.pitch, RobotMap.shooter, RobotMap.loader);
+    public static RopeScalar scalar = new RopeScalar(RobotMap.scalarPort);;
     public static int visionState = -1;
     private Thread visionThread;
     private Mat mat;
@@ -43,14 +45,12 @@ public class Robot extends IterativeRobot {
     private int rr = 0; //255
     private int gg = 0; //255
     private int bb = 0; //100%O
-    
-    int largeHMax = 0;
-    int largeHCur = 0;
-    int smallHMax = 0;
-    int smallHCur = 0;
-    double[] curColor = new double[3];
 
-    public UsbCamera turretCameraRaw;
+    private UsbCamera turretCamera;
+    private MjpegServer turretServer;
+    private MjpegServer trackingServer;
+    
+    private UsbCamera driverCamera;
     // Get a CvSink. This will capture Mats from the camera
     private CvSink cvSink;
     /**
@@ -61,16 +61,20 @@ public class Robot extends IterativeRobot {
         oi = new OI();
         mat = new Mat();
         cvt = new Mat();
-        //Camera
-        turretCameraRaw = CameraServer.getInstance().startAutomaticCapture("Turret", 0);
-        // Get the UsbCamera from CameraServer
-        //cameraRaw = CameraServer.getInstance().startAutomaticCapture();
-        turret = new Turret(RobotMap.rotation, RobotMap.pitch, RobotMap.shooter, RobotMap.loader);
-        turretCameraRaw.setExposureManual(30);
-        turretCameraRaw.setResolution(320, 240);
+        //Turret Camera
+        turretCamera = new UsbCamera("Turret", 0);
+        turretCamera.setExposureManual(30);
+        turretCamera.setResolution(320, 240);
+        
+        turretServer = new MjpegServer("serve_turret", 12451);
+        turretServer.setSource(turretCamera);
+        cvSink = new CvSink("opencv_turret");
+        cvSink.setSource(turretCamera);
+        RobotMap.turretOutputStream = new CvSource("Turret Calibrated", PixelFormat.kMJPEG, 320, 240, 30);
+        trackingServer = new MjpegServer("serve_tracking", 12452);
+        trackingServer.setSource(RobotMap.turretOutputStream);
+        
         drivetrain.gyro.calibrate();
-        cvSink = CameraServer.getInstance().getVideo();
-        RobotMap.outputStream = CameraServer.getInstance().putVideo("Tracking", 320, 240);
         visionThread = new Thread(() -> {
             while(!Thread.interrupted()){
                 switch(visionState){
@@ -90,14 +94,19 @@ public class Robot extends IterativeRobot {
                     break;
                 }
             }
+            DriverStation.reportWarning("Stuff", false);
+            RobotMap.turretOutputStream.putFrame(cvt);
         });
         visionThread.setDaemon(true);
         visionThread.start();
+
+        driverCamera = CameraServer.getInstance().startAutomaticCapture("Driver", 1);
+        driverCamera.setFPS(30);
+        driverCamera.setResolution(640, 480);
     }
     
     private void calibrateTurret(){
         //Upper Bound
-        DriverStation.reportWarning("Calibration...", false);
         if(OI.driverPad.getBackButton()){
             if(OI.driverPad.getBButton()){
                 if(!OI.bWasPressed){
@@ -154,12 +163,20 @@ public class Robot extends IterativeRobot {
             visionState = 0;
             return;
         }
-        SmartDashboard.putNumber("R: ", r);
+        /*SmartDashboard.putNumber("R: ", r);
         SmartDashboard.putNumber("G: ", g);
         SmartDashboard.putNumber("B: ", b);
         SmartDashboard.putNumber("RR: ", rr);
         SmartDashboard.putNumber("GG: ", gg);
-        SmartDashboard.putNumber("BB: ", bb);
+        SmartDashboard.putNumber("BB: ", bb);*/
+        if (cvSink.grabFrame(mat) == 0) {
+            // Send the output the error.
+            DriverStation.reportWarning("Tracking... Failed!", false);
+            RobotMap.turretOutputStream.notifyError(cvSink.getError());
+            // skip the rest of the current iteration
+            return;
+        }
+        Core.inRange(mat, new Scalar(r, g, b, 0), new Scalar(rr, gg, bb, 255), cvt);
     }
     
     private void sleepTurret(){
@@ -167,16 +184,16 @@ public class Robot extends IterativeRobot {
     }
     
     private boolean trackTarget(){  
-        DriverStation.reportWarning("Tracking... 1", false);
+        //DriverStation.reportWarning("Tracking... 1", false);
         if (cvSink.grabFrame(mat) == 0) {
             // Send the output the error.
             DriverStation.reportWarning("Tracking... Failed!", false);
-            RobotMap.outputStream.notifyError(cvSink.getError());
+            RobotMap.turretOutputStream.notifyError(cvSink.getError());
             // skip the rest of the current iteration
             return false;
         }
 
-        DriverStation.reportWarning("Tracking... 2", false);
+        //DriverStation.reportWarning("Tracking... 2", false);
         
         Core.inRange(mat, new Scalar(r, g, b, 0), new Scalar(rr, gg, bb, 255), cvt);
         // Process Image        
@@ -188,7 +205,11 @@ public class Robot extends IterativeRobot {
          *|\\\\\\3\\\\\\|
          *end
          */
-        
+        int largeHMax = 0;
+        int largeHCur = 0;
+        int smallHMax = 0;
+        int smallHCur = 0;
+        double[] curColor = new double[3];
         int colorState = 0; //0 = top, 1 = large, 2 = middle, 3 = small,
         int i = 0;
         for(int j = 0; j < cvt.rows(); ++j){
@@ -238,9 +259,11 @@ public class Robot extends IterativeRobot {
                 break;
             }
         }
-        DriverStation.reportWarning("Tracking... 2", false);
+        //DriverStation.reportWarning("Tracking... 3", false);
         SmartDashboard.putNumber("Large H: ", largeHMax);
         SmartDashboard.putNumber("Small H: ", smallHMax);
+        float distance = (329.6972761f*(2.0f/largeHMax + 1.0f/smallHMax));
+        SmartDashboard.putNumber("Distance: ", distance);
         return true;
     }
     

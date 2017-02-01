@@ -6,10 +6,10 @@ import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class RopeScalar extends Subsystem{
-    public Victor scalar;
+    public Victor scalarMotor;  
     
-    public RopeScalar(int scalar){
-        this.scalar = new Victor(scalar);
+    public RopeScalar(int scalarPort){
+        this.scalarMotor = new Victor(scalarPort);       
     }
     
     @Override

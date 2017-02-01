@@ -12,6 +12,7 @@ public class TurretSleep extends Command {
     public TurretSleep() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
+        requires(Robot.turret);
     }
 
     // Called just before this Command runs the first time

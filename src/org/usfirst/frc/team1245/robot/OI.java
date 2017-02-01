@@ -52,7 +52,7 @@ public class OI {
         driverPad = new XboxController(0);
         driverJoystick = new Joystick(0);
         gunnerJoystick = new Joystick(2);
-        driverAButton = new JoystickButton(driverPad,1);
+        driverAButton = new JoystickButton(driverPad, 1);
     }
     
     // Dead zone function

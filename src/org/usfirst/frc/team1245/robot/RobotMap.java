@@ -1,8 +1,6 @@
 package org.usfirst.frc.team1245.robot;
 
-import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
-import edu.wpi.first.wpilibj.CameraServer;
 
 /**
  * The robot.RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -22,7 +20,7 @@ public class RobotMap {
     // public static int rangefinderModule = 1;
 
     // Setup a CvSource. This will send images back to the Dashboard
-    public static CvSource outputStream;
+    public static CvSource turretOutputStream;
     
     // Talon SRX channels
     public static final int frontLeft = 3;
@@ -33,8 +31,11 @@ public class RobotMap {
     //Turret Channels
     public static final int rotation = 0;
     public static final int pitch = 1;
-    public static final int shooter = 3;
+    public static final int shooter = 0;
     public static final int loader = 2;
+    
+    //Scalar
+    public static final int scalarPort = 1;
     
     // Sensors
     public static final int gyroChannel = 0;

@@ -3,29 +3,35 @@ package org.usfirst.frc.team1245.robot.commands;
 import org.usfirst.frc.team1245.robot.OI;
 import org.usfirst.frc.team1245.robot.Robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class Scale extends Command{
-    int i;
     public Scale(){
         requires(Robot.scalar);
     }
     
     protected void initialize(){
-        i = 0;
+        
     }
     
     protected void execute(){
-        OI.driverAButton.whenReleased(incrementI());
-        if(i%3==0){
-            Robot.scalar.scalar.set(0.0);
+        if(OI.driverPad.getTrigger(Hand.kLeft) && OI.driverPad.getTrigger(Hand.kRight)){
+            if(OI.driverPad.getBButton()){
+                Robot.scalar.scalarMotor.set(-1.0);
+            }
         }
-        else if (i%3==1){
-            Robot.scalar.scalar.set(0.5);
+        else if(OI.driverPad.getBumper(Hand.kLeft) && OI.driverPad.getBumper(Hand.kRight)){
+            if(OI.driverPad.getBButton()){
+                Robot.scalar.scalarMotor.set(.6);
+            }
+            else{
+                Robot.scalar.scalarMotor.set(-.6);
+            }
         }
-        else {
-            Robot.scalar.scalar.set(1.0);
-        }
+        else
+            Robot.scalar.scalarMotor.set(0.0);
     }
     
     @Override
@@ -39,10 +45,5 @@ public class Scale extends Command{
     
     protected void interrupted(){
         
-    }
-    
-    private Command incrementI(){
-        ++i;
-        return null;
     }
 }
