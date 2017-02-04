@@ -11,16 +11,16 @@ public class Turret extends Subsystem {
     public Relay rotation, pitch; //some of these may end up being Victors, but that will be really easy to change.
     public Victor shooter, loader;
     
-    public Turret(int rotation, int pitch, int shooter, int loader){
-        this.rotation = new Relay(rotation);
-        this.pitch = new Relay(pitch);
-        this.loader = new Victor(loader);
-        this.shooter = new Victor(shooter);
+    public Turret(int rotationPort, int pitchPort, int shooterPort, int loaderPort){
+        this.rotation = new Relay(rotationPort);
+        this.pitch = new Relay(pitchPort);
+        this.loader = new Victor(loaderPort);
+        this.shooter = new Victor(shooterPort);
     }
     
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(new TurretSleep());
+        setDefaultCommand(new ManualTurret());
     }
 
 }

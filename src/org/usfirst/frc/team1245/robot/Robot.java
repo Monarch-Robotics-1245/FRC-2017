@@ -3,6 +3,7 @@ package org.usfirst.frc.team1245.robot;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
+import org.usfirst.frc.team1245.robot.commands.DriveForward;
 import org.usfirst.frc.team1245.robot.subsystems.ButterflyNet;
 import org.usfirst.frc.team1245.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1245.robot.subsystems.RopeScalar;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Relay.Value;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,7 +39,7 @@ public class Robot extends IterativeRobot {
     public static Turret turret = new Turret(RobotMap.rotation, RobotMap.pitch, RobotMap.shooter, RobotMap.loader);
     public static RopeScalar scalar = new RopeScalar(RobotMap.scalarPort);
     public static ButterflyNet butterfree = new ButterflyNet(RobotMap.butterflyNet);
-    public static int visionState = -1;
+    public static int visionState = 2;
     private Thread visionThread;
     private Mat mat;
     //MEME MACHINE
@@ -51,13 +53,15 @@ public class Robot extends IterativeRobot {
     private int bb = 0; //100%O
 
     private UsbCamera turretCamera;
-    private MjpegServer turretServer;
+    //private MjpegServer turretServer;
     private MjpegServer trackingServer;
     
     private UsbCamera driverCamera;
-    private MjpegServer driverServer;
+    //private MjpegServer driverServer;
     // Get a CvSink. This will capture Mats from the camera
     private CvSink cvSink;
+    
+    private Command autonomousCommand;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -275,6 +279,7 @@ public class Robot extends IterativeRobot {
     }
     
     private void manualTurret(){
+        Robot.turret.shooter.set(1.0);
         if(OI.deadZone(OI.gunnerJoystick.getY(), RobotMap.translationalDeadZone) == 0.0){
             turret.pitch.set(Value.kOff);
         }else {
@@ -285,7 +290,7 @@ public class Robot extends IterativeRobot {
         }else turret.rotation.set(((OI.gunnerJoystick.getTwist() > 0) ? Value.kForward : Value.kReverse));
         if(OI.gunnerJoystick.getTrigger()){
             turret.loader.set(1.0);
-        }
+        }else turret.loader.set(0.0);
     }
     
     public void disabledPeriodic() {
@@ -293,7 +298,11 @@ public class Robot extends IterativeRobot {
     }
 
     public void autonomousInit() {
-
+        Robot.drivetrain.gyro.reset();
+        autonomousCommand = new DriveForward(3.5);
+        if(autonomousCommand != null) {
+            autonomousCommand.start();            
+        }
     }
 
     /**

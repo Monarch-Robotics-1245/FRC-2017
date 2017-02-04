@@ -19,12 +19,7 @@ public class Feed extends Command{
         if(OI.driverPad.getXButton()){
             feeding = !feeding; //switches from t -> f, and vice versa
         }
-        if(feeding){
-            Robot.butterfree.butterFree.set(1.0);
-        }
-        else{
-            Robot.butterfree.butterFree.set(0.0);
-        }
+        Robot.butterfree.butterFree.set((feeding) ? 1.0 : 0.0);
     }
     
     @Override

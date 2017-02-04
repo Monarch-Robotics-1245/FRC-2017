@@ -5,12 +5,8 @@ import java.util.List;
 
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
-import org.usfirst.frc.team1245.robot.OI;
 import org.usfirst.frc.team1245.robot.Robot;
-import org.usfirst.frc.team1245.robot.RobotMap;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -93,7 +89,7 @@ public class ManualTurret extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        Robot.visionState = 2;
+        /*Robot.visionState = 2;
         double rotate = OI.deadZone(OI.gunnerJoystick.getTwist(), RobotMap.turretDeadZone);
         if(rotate > 0){
             Robot.turret.rotation.set(Relay.Value.kForward);
@@ -124,7 +120,7 @@ public class ManualTurret extends Command {
         }
         else {
             Robot.turret.loader.set(0.0);
-        }
+        }*/
     }
 
     // Make this return true when this Command no longer needs to run execute()
