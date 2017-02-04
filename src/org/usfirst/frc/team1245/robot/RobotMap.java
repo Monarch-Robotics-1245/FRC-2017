@@ -21,7 +21,13 @@ public class RobotMap {
 
     // Setup a CvSource. This will send images back to the Dashboard
     public static CvSource turretOutputStream;
-    
+    /*TODO: update
+     * Butterfly Net 0
+     * Loader 1
+     * Launcher 2
+     * Scalar 3
+     * Spikes do later
+     * */
     // Talon SRX channels
     public static final int frontLeft = 3;
     public static final int rearLeft = 2;
@@ -31,11 +37,14 @@ public class RobotMap {
     //Turret Channels
     public static final int rotation = 0;
     public static final int pitch = 1;
-    public static final int shooter = 0;
-    public static final int loader = 2;
+    public static final int shooter = 2;
+    public static final int loader = 1;
     
     //Scalar
-    public static final int scalarPort = 1;
+    public static final int scalarPort = 3;
+    
+    //Butterfly net
+    public static final int butterflyNet = 0; //TODO: change this! not real probably!
     
     // Sensors
     public static final int gyroChannel = 0;

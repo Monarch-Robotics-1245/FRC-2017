@@ -22,6 +22,7 @@ public class ManualTurret extends Command {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
         requires(Robot.turret);
+        Robot.turret.shooter.set(1.0);
         /*Robot.turret.cameraRaw.setResolution(640, 480);
         Robot.visionThread = new Thread(() -> {
             // Get a CvSink. This will capture Mats from the camera
