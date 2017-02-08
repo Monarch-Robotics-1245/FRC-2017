@@ -97,16 +97,6 @@ public class Robot extends IterativeRobot {
         drivetrain.gyro.calibrate();
         visionThread = new Thread(() -> {
 
-            //controls switching camera modes
-            if (OI.gunnerJoystick.getRawButton(RobotMap.cameraSwitchButton) && !isPressed){
-                //just got pressed
-                isPressed = true;
-                ++cameraState;
-            }
-            else if(!OI.gunnerJoystick.getRawButton(RobotMap.cameraSwitchButton) && isPressed){
-                isPressed = false;
-            }
-
             while(!Thread.interrupted()){
                 if(cameraState > 2){
                     cameraState = 0;
