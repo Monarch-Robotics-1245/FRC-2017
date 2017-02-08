@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class MecanumDrive extends Command {
-
+    
+    private boolean isPressed; //used for camera switching
+    
     public MecanumDrive() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -31,9 +33,15 @@ public class MecanumDrive extends Command {
     double speedScale = 1.0;
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        if(OI.driverJoystick.getRawButton(7)){
-            Robot.cameraState++;
-        }
+         //controls switching camera modes
+            if (OI.gunnerJoystick.getRawButton(RobotMap.cameraSwitchButton) && !isPressed){
+                //just got pressed
+                isPressed = true;
+                ++Robot.cameraState;
+            }
+            else if(!OI.gunnerJoystick.getRawButton(RobotMap.cameraSwitchButton) && isPressed){
+                isPressed = false;
+            }
         
         if(OI.driverPad.getAButton()){
             speedScale = .80;
