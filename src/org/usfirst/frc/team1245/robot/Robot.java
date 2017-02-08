@@ -39,7 +39,10 @@ public class Robot extends IterativeRobot {
     public static Turret turret = new Turret(RobotMap.rotation, RobotMap.pitch, RobotMap.shooter, RobotMap.loader);
     public static RopeScalar scalar = new RopeScalar(RobotMap.scalarPort);
     public static ButterflyNet butterfree = new ButterflyNet(RobotMap.butterflyNet);
+    
     public static int visionState = 2;
+    public static int cameraState = 0;
+    
     private Thread visionThread;
     private Mat mat;
     //MEME MACHINE
@@ -52,13 +55,11 @@ public class Robot extends IterativeRobot {
     private int gg = 0; //255
     private int bb = 0; //100%O
 
-    private UsbCamera turretCamera;
-    //private MjpegServer turretServer;
-    private MjpegServer trackingServer;
-    
+    private UsbCamera turretCamera;    
     private UsbCamera driverCamera;
-    //private MjpegServer driverServer;
-    // Get a CvSink. This will capture Mats from the camera
+
+    private MjpegServer outputServer;
+    
     private CvSink cvSink;
     
     private Command autonomousCommand;
@@ -70,27 +71,47 @@ public class Robot extends IterativeRobot {
         oi = new OI();
         mat = new Mat();
         cvt = new Mat();
+        
+        CameraServer.getInstance().removeServer("Turret");
+        CameraServer.getInstance().removeServer("Driver Cam");
+        CameraServer.getInstance().removeServer("Driver");
+        CameraServer.getInstance().removeServer("Tracking");
+        CameraServer.getInstance().removeServer("Turret Stuff");
+        
         //Turret Camera
         turretCamera = new UsbCamera("Turret Raw", 0);
-        //turretCamera.setResolution(320, 240);
-        
-        cvSink = CameraServer.getInstance().getVideo(turretCamera);
-        RobotMap.turretOutputStream = new CvSource("Tracking", PixelFormat.kMJPEG, 320, 240, 30);
-        trackingServer = new MjpegServer("serve_tracking", 12451);
-        trackingServer.setSource(RobotMap.turretOutputStream);
-        CameraServer.getInstance().addServer(trackingServer);
-        //headshot
-        //MEMES
+        turretCamera.setResolution(320, 240);
+        turretCamera.setExposureManual(30);
         //Driver Camera
         driverCamera = new UsbCamera("Driver Cam", 1);
-        //driverCamera.setResolution(640, 480);
+        driverCamera.setResolution(640, 480);
         
-        CameraServer.getInstance().startAutomaticCapture(driverCamera);
-        CameraServer.getInstance().startAutomaticCapture(turretCamera);
+        RobotMap.cameraOutputStream = new CvSource("Output", PixelFormat.kMJPEG, 640, 480, 30);
+        outputServer = new MjpegServer("serve_output", 12450);
+        outputServer.setSource(RobotMap.cameraOutputStream);
+        CameraServer.getInstance().addServer(outputServer);
+
+        cvSink = CameraServer.getInstance().getVideo();
         
         drivetrain.gyro.calibrate();
         visionThread = new Thread(() -> {
             while(!Thread.interrupted()){
+                if(cameraState > 2){
+                    cameraState = 0;
+                }
+                switch(cameraState){
+                case 0:
+                    outputServer.setSource(RobotMap.cameraOutputStream);
+                    break;
+                case 1:
+                    outputServer.setSource(driverCamera);
+                    break;
+                case 2:
+                    outputServer.setSource(turretCamera);
+                    break;
+                default:
+                    break;
+                }
                 switch(visionState){
                 case -1:
                     calibrateTurret();
@@ -99,7 +120,9 @@ public class Robot extends IterativeRobot {
                     sleepTurret();
                     break;
                 case 1:
-                    trackTarget();
+                    if(!trackTarget()){
+                        visionState = 2;
+                    }
                     break;
                 case 2:
                     manualTurret();
@@ -107,7 +130,7 @@ public class Robot extends IterativeRobot {
                 default:
                     break;
                 }
-                RobotMap.turretOutputStream.putFrame(cvt);
+                RobotMap.cameraOutputStream.putFrame(cvt);
             }
         });
         visionThread.setDaemon(true);
@@ -181,7 +204,7 @@ public class Robot extends IterativeRobot {
         if (cvSink.grabFrame(mat) == 0) {
             // Send the output the error.
             DriverStation.reportWarning("Tracking... Failed!", false);
-            RobotMap.turretOutputStream.notifyError(cvSink.getError());
+            RobotMap.cameraOutputStream.notifyError(cvSink.getError());
             // skip the rest of the current iteration
             return;
         }
@@ -197,7 +220,7 @@ public class Robot extends IterativeRobot {
         if (cvSink.grabFrame(mat) == 0) {
             // Send the output the error.
             DriverStation.reportWarning("Tracking... Failed!", false);
-            RobotMap.turretOutputStream.notifyError(cvSink.getError());
+            RobotMap.cameraOutputStream.notifyError(cvSink.getError());
             // skip the rest of the current iteration
             return false;
         }
@@ -279,7 +302,14 @@ public class Robot extends IterativeRobot {
     }
     
     private void manualTurret(){
-        Robot.turret.shooter.set(1.0);
+        if (cvSink.grabFrame(mat) == 0) {
+            // Send the output the error.
+            DriverStation.reportWarning("Camera Retreival Failed!", false);
+            RobotMap.cameraOutputStream.notifyError(cvSink.getError());
+            // skip the rest of the current iteration
+            return;
+        }
+        Robot.turret.shooter.set(OI.gunnerJoystick.getThrottle());
         if(OI.deadZone(OI.gunnerJoystick.getY(), RobotMap.translationalDeadZone) == 0.0){
             turret.pitch.set(Value.kOff);
         }else {
@@ -299,7 +329,7 @@ public class Robot extends IterativeRobot {
 
     public void autonomousInit() {
         Robot.drivetrain.gyro.reset();
-        autonomousCommand = new DriveForward(3.5);
+        autonomousCommand = new DriveForward(.75);
         if(autonomousCommand != null) {
             autonomousCommand.start();            
         }

@@ -20,7 +20,7 @@ public class RobotMap {
     // public static int rangefinderModule = 1;
 
     // Setup a CvSource. This will send images back to the Dashboard
-    public static CvSource turretOutputStream;
+    public static CvSource cameraOutputStream;
     /*TODO: update
      * Butterfly Net 0
      * Loader 1

@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1245.robot.subsystems;
 
-import org.usfirst.frc.team1245.robot.commands.TurretSleep;
+import org.usfirst.frc.team1245.robot.commands.ManualTurret;
 
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Victor;

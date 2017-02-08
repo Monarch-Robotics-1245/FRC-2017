@@ -31,8 +31,14 @@ public class MecanumDrive extends Command {
     double speedScale = 1.0;
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        if(OI.driverPad.getBumper(Hand.kLeft)){
-            speedScale = .90;
+        if(OI.driverJoystick.getRawButton(7)){
+            Robot.cameraState++;
+        }
+        
+        if(OI.driverPad.getAButton()){
+            speedScale = .80;
+        }else if(OI.driverPad.getBButton()){
+            speedScale = .50;
         }else{
             speedScale = 1.0;
         }
