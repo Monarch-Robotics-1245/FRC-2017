@@ -53,6 +53,7 @@ public class RobotMap {
     public static final int speedButton = 5;
     public static final int fireButton = 1;
     public static final int overrideButton = 2;
+    public static final int cameraSwitchButton = 7;
     
     // Deadzones for rotation and translation for the drivetrain
     public static final double turretDeadZone = .1;
