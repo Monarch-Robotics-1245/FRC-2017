@@ -302,7 +302,7 @@ public class Robot extends IterativeRobot {
     
     private void manualTurret(){
         if(OI.gunnerJoystick.getRawButton(7)){
-                        cameraState = 2;
+            cameraState = 2;
         }else cameraState = 1;
         
         if (cvSink.grabFrame(mat) == 0) {
