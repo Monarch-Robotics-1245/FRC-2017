@@ -45,7 +45,6 @@ public class Robot extends IterativeRobot {
     
     private Thread visionThread;
     private Mat mat;
-    //MEME MACHINE
     private Mat cvt;
     
     private int r = 0; //10
@@ -302,6 +301,10 @@ public class Robot extends IterativeRobot {
     }
     
     private void manualTurret(){
+        if(OI.gunnerJoystick.getRawButton(7)){
+                        cameraState = 2;
+        }else cameraState = 1;
+        
         if (cvSink.grabFrame(mat) == 0) {
             // Send the output the error.
             DriverStation.reportWarning("Camera Retreival Failed!", false);
