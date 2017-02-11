@@ -3,7 +3,7 @@ package org.usfirst.frc.team1245.robot;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
-import org.usfirst.frc.team1245.robot.commands.DriveForward;
+import org.usfirst.frc.team1245.robot.commands.DriveDistance;
 import org.usfirst.frc.team1245.robot.subsystems.ButterflyNet;
 import org.usfirst.frc.team1245.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1245.robot.subsystems.RopeScalar;
@@ -70,7 +70,7 @@ public class Robot extends IterativeRobot {
         oi = new OI();
         mat = new Mat();
         cvt = new Mat();
-        
+        //to clean up driver interface
         CameraServer.getInstance().removeServer("Turret");
         CameraServer.getInstance().removeServer("Driver Cam");
         CameraServer.getInstance().removeServer("Driver");
@@ -90,7 +90,9 @@ public class Robot extends IterativeRobot {
         outputServer.setSource(RobotMap.cameraOutputStream);
         CameraServer.getInstance().addServer(outputServer);
 
-        cvSink = CameraServer.getInstance().getVideo();
+        //cvSink = CameraServer.getInstance().getVideo();
+        //TODO this has a problem, put it back in and fix it. why doesn't it work. Yes I am ranting in my comments,
+        //just to make it big enough for me to notice it later.
         
         drivetrain.gyro.calibrate();
         visionThread = new Thread(() -> {
@@ -109,6 +111,7 @@ public class Robot extends IterativeRobot {
                     outputServer.setSource(turretCamera);
                     break;
                 default:
+                    cameraState = 0;
                     break;
                 }
                 switch(visionState){
@@ -332,7 +335,8 @@ public class Robot extends IterativeRobot {
 
     public void autonomousInit() {
         Robot.drivetrain.gyro.reset();
-        autonomousCommand = new DriveForward(.75);
+        //autonomousCommand = new DriveForward(.75);
+        autonomousCommand = new DriveDistance(15, 0);
         if(autonomousCommand != null) {
             autonomousCommand.start();            
         }
