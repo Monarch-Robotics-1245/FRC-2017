@@ -3,7 +3,7 @@ package org.usfirst.frc.team1245.robot;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
-import org.usfirst.frc.team1245.robot.commands.DriveDistance;
+import org.usfirst.frc.team1245.robot.commands.DriveForward;
 import org.usfirst.frc.team1245.robot.subsystems.ButterflyNet;
 import org.usfirst.frc.team1245.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1245.robot.subsystems.RopeScalar;
@@ -336,7 +336,7 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
         Robot.drivetrain.gyro.reset();
         //autonomousCommand = new DriveForward(.75);
-        autonomousCommand = new DriveDistance(15, 0);
+        autonomousCommand = new DriveForward(7500);
         if(autonomousCommand != null) {
             autonomousCommand.start();            
         }
