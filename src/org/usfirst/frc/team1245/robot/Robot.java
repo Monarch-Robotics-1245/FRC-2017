@@ -304,7 +304,7 @@ public class Robot extends IterativeRobot {
     }
     
     private void manualTurret(){
-        if(OI.gunnerJoystick.getRawButton(7)){
+        if(OI.gunnerJoystick.getRawButton(RobotMap.cameraSwitchButton)){
             cameraState = 2;
         }else cameraState = 1;
         
