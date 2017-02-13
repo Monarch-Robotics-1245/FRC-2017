@@ -3,17 +3,15 @@ package org.usfirst.frc.team1245.robot;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
-import org.usfirst.frc.team1245.robot.commands.DriveForward;
+import org.usfirst.frc.team1245.robot.commands.DriveDistance;
 import org.usfirst.frc.team1245.robot.subsystems.ButterflyNet;
 import org.usfirst.frc.team1245.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1245.robot.subsystems.RopeScalar;
 import org.usfirst.frc.team1245.robot.subsystems.Turret;
 
 import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -71,11 +69,11 @@ public class Robot extends IterativeRobot {
         mat = new Mat();
         cvt = new Mat();
         //to clean up driver interface
-        CameraServer.getInstance().removeServer("Turret");
+        /*CameraServer.getInstance().removeServer("Turret");
         CameraServer.getInstance().removeServer("Driver Cam");
         CameraServer.getInstance().removeServer("Driver");
         CameraServer.getInstance().removeServer("Tracking");
-        CameraServer.getInstance().removeServer("Turret Stuff");
+        CameraServer.getInstance().removeServer("Turret Stuff");*/
         
         //Turret Camera
         turretCamera = new UsbCamera("Turret Raw", 0);
@@ -85,16 +83,18 @@ public class Robot extends IterativeRobot {
         driverCamera = new UsbCamera("Driver Cam", 1);
         driverCamera.setResolution(640, 480);
         
+        CameraServer.getInstance().addCamera(driverCamera);
+        
+        /*
         RobotMap.cameraOutputStream = new CvSource("Output", PixelFormat.kMJPEG, 640, 480, 30);
         outputServer = new MjpegServer("serve_output", 12450);
         outputServer.setSource(RobotMap.cameraOutputStream);
         CameraServer.getInstance().addServer(outputServer);
+        */
 
-        //cvSink = CameraServer.getInstance().getVideo();
-        //TODO this has a problem, put it back in and fix it. why doesn't it work. Yes I am ranting in my comments,
-        //just to make it big enough for me to notice it later.
+        cvSink = CameraServer.getInstance().getVideo();
         
-        drivetrain.gyro.calibrate();
+        //drivetrain.gyro.calibrate();
         visionThread = new Thread(() -> {
             while(!Thread.interrupted()){
                 if(cameraState > 2){
@@ -334,9 +334,9 @@ public class Robot extends IterativeRobot {
     }
 
     public void autonomousInit() {
-        Robot.drivetrain.gyro.reset();
+        //Robot.drivetrain.gyro.reset();
         //autonomousCommand = new DriveForward(.75);
-        autonomousCommand = new DriveForward(7500);
+        autonomousCommand = new DriveDistance(1000,0);
         if(autonomousCommand != null) {
             autonomousCommand.start();            
         }

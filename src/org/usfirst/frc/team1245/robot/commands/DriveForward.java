@@ -2,6 +2,7 @@ package org.usfirst.frc.team1245.robot.commands;
 
 import org.usfirst.frc.team1245.robot.Robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -24,6 +25,7 @@ public class DriveForward extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
         timer.start();
+        DriverStation.reportWarning("Initializing autonomous", true);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -41,6 +43,8 @@ public class DriveForward extends Command {
         timer.stop();
         timer.reset();
         Robot.drivetrain.getDrivetrain().stopMotor();
+        DriverStation.reportWarning("Ending autonomous", true);
+        
     }
 
     // Called when another command which requires one or more of the same

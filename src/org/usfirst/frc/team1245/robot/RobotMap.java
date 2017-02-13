@@ -44,7 +44,7 @@ public class RobotMap {
     public static final int scalarPort = 3;
     
     //Butterfly net
-    public static final int butterflyNet = 0; //TODO: change this! not real probably!
+    public static final int butterflyNet = 0;
     
     // Sensors
     public static final int gyroChannel = 0;
