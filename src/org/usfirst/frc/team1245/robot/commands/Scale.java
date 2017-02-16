@@ -19,20 +19,10 @@ public class Scale extends Command{
     protected void execute(){
         if(OI.driverPad.getTriggerAxis(Hand.kLeft) > 0.5 && OI.driverPad.getTriggerAxis(Hand.kRight) > 0.5){
             DriverStation.reportWarning("Boop", false);
-            if(OI.driverPad.getYButton()){
-                Robot.scalar.scalarMotor.set(1.0);
-            }
-            else{
-                Robot.scalar.scalarMotor.set(-1.0);
-            }
+            Robot.scalar.scalarMotor.set(-1.0);
         }
         else if(OI.driverPad.getBumper(Hand.kLeft) && OI.driverPad.getBumper(Hand.kRight)){
-            if(OI.driverPad.getYButton()){
-                Robot.scalar.scalarMotor.set(.6);
-            }
-            else{
-                Robot.scalar.scalarMotor.set(-.6);
-            }
+            Robot.scalar.scalarMotor.set(-.6);
         }
         else
             Robot.scalar.scalarMotor.set(0.0);

@@ -3,7 +3,7 @@ package org.usfirst.frc.team1245.robot;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
-import org.usfirst.frc.team1245.robot.commands.DriveDistance;
+import org.usfirst.frc.team1245.robot.commands.DriveForward;
 import org.usfirst.frc.team1245.robot.subsystems.ButterflyNet;
 import org.usfirst.frc.team1245.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1245.robot.subsystems.RopeScalar;
@@ -97,7 +97,7 @@ public class Robot extends IterativeRobot {
         //drivetrain.gyro.calibrate();
         visionThread = new Thread(() -> {
             while(!Thread.interrupted()){
-                if(cameraState > 2){
+                /*if(cameraState > 2){
                     cameraState = 0;
                 }
                 switch(cameraState){
@@ -113,7 +113,7 @@ public class Robot extends IterativeRobot {
                 default:
                     cameraState = 0;
                     break;
-                }
+                }*/
                 switch(visionState){
                 case -1:
                     calibrateTurret();
@@ -214,7 +214,7 @@ public class Robot extends IterativeRobot {
     }
     
     private void sleepTurret(){
-        visionState = 1;
+        visionState = 2;
     }
     
     private boolean trackTarget(){  
@@ -304,29 +304,7 @@ public class Robot extends IterativeRobot {
     }
     
     private void manualTurret(){
-        if(OI.gunnerJoystick.getRawButton(RobotMap.cameraSwitchButton)){
-            cameraState = 2;
-        }else cameraState = 1;
         
-        if (cvSink.grabFrame(mat) == 0) {
-            // Send the output the error.
-            DriverStation.reportWarning("Camera Retreival Failed!", false);
-            RobotMap.cameraOutputStream.notifyError(cvSink.getError());
-            // skip the rest of the current iteration
-            return;
-        }
-        Robot.turret.shooter.set(OI.gunnerJoystick.getThrottle());
-        if(OI.deadZone(OI.gunnerJoystick.getY(), RobotMap.translationalDeadZone) == 0.0){
-            turret.pitch.set(Value.kOff);
-        }else {
-            turret.pitch.set((OI.gunnerJoystick.getY() > 0) ? Value.kForward : Value.kReverse);
-        }
-        if(OI.deadZone(OI.gunnerJoystick.getTwist(), RobotMap.translationalDeadZone) == 0.0){
-            turret.rotation.set(Value.kOff);
-        }else turret.rotation.set(((OI.gunnerJoystick.getTwist() > 0) ? Value.kForward : Value.kReverse));
-        if(OI.gunnerJoystick.getTrigger()){
-            turret.loader.set(1.0);
-        }else turret.loader.set(0.0);
     }
     
     public void disabledPeriodic() {
@@ -335,8 +313,8 @@ public class Robot extends IterativeRobot {
 
     public void autonomousInit() {
         //Robot.drivetrain.gyro.reset();
-        //autonomousCommand = new DriveForward(.75);
-        autonomousCommand = new DriveDistance(1000,0);
+        autonomousCommand = new DriveForward(1);
+        //autonomousCommand = new DriveDistance(1000,0);
         if(autonomousCommand != null) {
             autonomousCommand.start();            
         }
@@ -354,7 +332,7 @@ public class Robot extends IterativeRobot {
         // teleop starts running. If you want the autonomous to 
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        //if (autonomousCommand != null) autonomousCommand.cancel();
+        if (autonomousCommand != null) autonomousCommand.cancel();
     }
 
     /**

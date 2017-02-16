@@ -5,8 +5,12 @@ import java.util.List;
 
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
+import org.usfirst.frc.team1245.robot.OI;
 import org.usfirst.frc.team1245.robot.Robot;
+import org.usfirst.frc.team1245.robot.RobotMap;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -18,7 +22,7 @@ public class ManualTurret extends Command {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
         requires(Robot.turret);
-        Robot.turret.shooter.set(1.0);
+        //Robot.turret.shooter.set(1.0);
         /*Robot.turret.cameraRaw.setResolution(640, 480);
         Robot.visionThread = new Thread(() -> {
             // Get a CvSink. This will capture Mats from the camera
@@ -89,6 +93,30 @@ public class ManualTurret extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+        DriverStation.reportWarning("Boop", false);
+        /*if(OI.gunnerJoystick.getRawButton(RobotMap.cameraSwitchButton)){
+            cameraState = 2;
+        }else cameraState = 1;*/
+        
+        /*if (cvSink.grabFrame(mat) == 0) {
+            // Send the output the error.
+            DriverStation.reportWarning("Camera Retreival Failed!", false);
+            RobotMap.cameraOutputStream.notifyError(cvSink.getError());
+            // skip the rest of the current iteration
+            return;
+        }*/
+        Robot.turret.shooter.set(-OI.deadZone((OI.gunnerJoystick.getThrottle()+1.0)/2.0, RobotMap.rotationalDeadZone*3));
+        if(OI.deadZone(OI.gunnerJoystick.getX(), RobotMap.translationalDeadZone*3) == 0.0){
+            Robot.turret.pitch.set(Value.kOff);
+        }else {
+            Robot.turret.pitch.set((OI.gunnerJoystick.getX() > 0) ? Value.kForward : Value.kReverse);
+        }
+        if(OI.deadZone(OI.gunnerJoystick.getTwist(), RobotMap.rotationalDeadZone*3) == 0.0){
+            Robot.turret.rotation.set(Value.kOff);
+        }else Robot.turret.rotation.set(((OI.gunnerJoystick.getTwist() < 0) ? Value.kForward : Value.kReverse));
+        if(OI.gunnerJoystick.getTrigger()){
+            Robot.turret.loader.set(1.0);
+        }else Robot.turret.loader.set(0.0);
         /*Robot.visionState = 2;
         double rotate = OI.deadZone(OI.gunnerJoystick.getTwist(), RobotMap.turretDeadZone);
         if(rotate > 0){

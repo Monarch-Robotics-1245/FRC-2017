@@ -33,11 +33,11 @@ public class MecanumDrive extends Command {
     protected void execute() {
         
         if(OI.driverPad.getAButton()){
-            speedScale = .80;
+            speedScale = .35; //.8 
         }else if(OI.driverPad.getBButton()){
-            speedScale = .50;
+            speedScale = .35; //.5
         }else{
-            speedScale = 1.0;
+            speedScale = .35; //1
         }
         
         // Get joystick input and filter it through the dead zone function

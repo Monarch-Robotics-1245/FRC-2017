@@ -32,7 +32,7 @@ public class Drivetrain extends Subsystem {
     //public Gyro gyro;
     //private Timer timer;
     public Drivetrain(int frontLeft, int frontRight, int rearLeft, int rearRight, int gyroChannel){
-        initDPID(); //because we use PID on the robot.
+        //initDPID(); //because we use PID on the robot.
         // Initializing the CANTalons
         this.frontLeft = new CANTalon(frontLeft);
         this.frontRight = new CANTalon(frontRight);
@@ -43,7 +43,7 @@ public class Drivetrain extends Subsystem {
         this.rearLeft.enableBrakeMode(true);
         this.rearRight.enableBrakeMode(true);
 
-        this.frontLeft.setControlMode(CANTalon.TalonControlMode.Position.value);
+        /*this.frontLeft.setControlMode(CANTalon.TalonControlMode.Position.value);
         this.frontRight.setControlMode(CANTalon.TalonControlMode.Position.value);
         this.rearLeft.setControlMode(CANTalon.TalonControlMode.Position.value);
         this.rearRight.setControlMode(CANTalon.TalonControlMode.Position.value);
@@ -54,8 +54,8 @@ public class Drivetrain extends Subsystem {
         
         this.frontLeft.setPID(.1, 0, 0);
         this.frontRight.setPID(.1, 0,  0);
-        this.rearLeft.setPID(.1, 0, 0);
-        this.rearRight.setPID(.1, 0, 0);        
+        this.rearLeft.setPID(-.1, 0, 0);
+        this.rearRight.setPID(-.1, 0, 0);*/
         
         //gyro = new AnalogGyro(gyroChannel);
         //timer = new Timer();

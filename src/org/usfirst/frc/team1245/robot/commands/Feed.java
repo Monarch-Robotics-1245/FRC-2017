@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class Feed extends Command{
     boolean feeding = true;
+    boolean xWasPressed = false;
+    
     public Feed(){
         requires(Robot.butterfree);
     }
@@ -16,10 +18,12 @@ public class Feed extends Command{
     }
     
     protected void execute(){
-        if(OI.driverPad.getXButton()){
+        if(OI.driverPad.getXButton() && !xWasPressed){
             feeding = !feeding; //switches from t -> f, and vice versa
-        }
-        Robot.butterfree.butterFree.set((feeding) ? -0.35 : 0.0);
+            xWasPressed = true;
+        }else xWasPressed = false;
+        
+        Robot.butterfree.butterFree.set((feeding) ? -.95 : 0.0);  
     }
     
     @Override
