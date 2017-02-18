@@ -6,8 +6,8 @@ import org.usfirst.frc.team1245.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class Feed extends Command{
-    boolean feeding = true;
-    boolean xWasPressed = false;
+    boolean fly = false;
+    int pressTime = 0;
     
     public Feed(){
         requires(Robot.butterfree);
@@ -18,12 +18,12 @@ public class Feed extends Command{
     }
     
     protected void execute(){
-        if(OI.driverPad.getXButton() && !xWasPressed){
-            feeding = !feeding; //switches from t -> f, and vice versa
-            xWasPressed = true;
-        }else xWasPressed = false;
-        
-        Robot.butterfree.butterFree.set((feeding) ? -.95 : 0.0);  
+        pressTime -= 1;
+        if(OI.driverPad.getXButton() && pressTime <= 0){
+            pressTime = 5;
+            fly = !fly;
+        }
+        Robot.butterfree.butterFree.set((fly) ? -0.95 : 0.0);
     }
     
     @Override

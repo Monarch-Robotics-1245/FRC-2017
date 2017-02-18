@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Turret extends Subsystem {
 
-    public Relay rotation, pitch; //some of these may end up being Victors, but that will be really easy to change.
-    public Victor shooter, loader;
+    public Relay rotation; //some of these may end up being Victors, but that will be really easy to change.
+    public Victor shooter, loader, pitch;
     
     public Turret(int rotationPort, int pitchPort, int shooterPort, int loaderPort){
         this.rotation = new Relay(rotationPort);
-        this.pitch = new Relay(pitchPort);
+        this.pitch = new Victor(pitchPort);
         this.loader = new Victor(loaderPort);
         this.shooter = new Victor(shooterPort);
     }

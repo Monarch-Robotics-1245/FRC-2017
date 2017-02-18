@@ -9,7 +9,6 @@ import org.usfirst.frc.team1245.robot.OI;
 import org.usfirst.frc.team1245.robot.Robot;
 import org.usfirst.frc.team1245.robot.RobotMap;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -93,7 +92,6 @@ public class ManualTurret extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        DriverStation.reportWarning("Boop", false);
         /*if(OI.gunnerJoystick.getRawButton(RobotMap.cameraSwitchButton)){
             cameraState = 2;
         }else cameraState = 1;*/
@@ -106,16 +104,12 @@ public class ManualTurret extends Command {
             return;
         }*/
         Robot.turret.shooter.set(-OI.deadZone((OI.gunnerJoystick.getThrottle()+1.0)/2.0, RobotMap.rotationalDeadZone*3));
-        if(OI.deadZone(OI.gunnerJoystick.getX(), RobotMap.translationalDeadZone*3) == 0.0){
-            Robot.turret.pitch.set(Value.kOff);
-        }else {
-            Robot.turret.pitch.set((OI.gunnerJoystick.getX() > 0) ? Value.kForward : Value.kReverse);
-        }
+        Robot.turret.pitch.set(OI.deadZone(OI.gunnerJoystick.getX(), RobotMap.translationalDeadZone*3));
         if(OI.deadZone(OI.gunnerJoystick.getTwist(), RobotMap.rotationalDeadZone*3) == 0.0){
             Robot.turret.rotation.set(Value.kOff);
         }else Robot.turret.rotation.set(((OI.gunnerJoystick.getTwist() < 0) ? Value.kForward : Value.kReverse));
         if(OI.gunnerJoystick.getTrigger()){
-            Robot.turret.loader.set(1.0);
+            Robot.turret.loader.set(-1.0);
         }else Robot.turret.loader.set(0.0);
         /*Robot.visionState = 2;
         double rotate = OI.deadZone(OI.gunnerJoystick.getTwist(), RobotMap.turretDeadZone);

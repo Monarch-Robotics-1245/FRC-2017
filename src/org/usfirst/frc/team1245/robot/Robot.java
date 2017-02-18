@@ -15,7 +15,6 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -84,6 +83,7 @@ public class Robot extends IterativeRobot {
         driverCamera.setResolution(640, 480);
         
         CameraServer.getInstance().addCamera(driverCamera);
+        CameraServer.getInstance().addCamera(turretCamera);
         
         /*
         RobotMap.cameraOutputStream = new CvSource("Output", PixelFormat.kMJPEG, 640, 480, 30);

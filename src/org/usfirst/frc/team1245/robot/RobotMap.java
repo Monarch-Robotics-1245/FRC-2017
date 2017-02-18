@@ -36,7 +36,7 @@ public class RobotMap {
     
     //Turret Channels
     public static final int rotation = 0;
-    public static final int pitch = 1;
+    public static final int pitch = 4;
     public static final int shooter = 2;
     public static final int loader = 1;
     
