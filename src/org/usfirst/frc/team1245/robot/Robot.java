@@ -67,53 +67,24 @@ public class Robot extends IterativeRobot {
         oi = new OI();
         mat = new Mat();
         cvt = new Mat();
-        //to clean up driver interface
-        /*CameraServer.getInstance().removeServer("Turret");
-        CameraServer.getInstance().removeServer("Driver Cam");
-        CameraServer.getInstance().removeServer("Driver");
-        CameraServer.getInstance().removeServer("Tracking");
-        CameraServer.getInstance().removeServer("Turret Stuff");*/
         
         //Turret Camera
         turretCamera = new UsbCamera("Turret Raw", 0);
         turretCamera.setResolution(320, 240);
         turretCamera.setExposureManual(30);
+        
         //Driver Camera
         driverCamera = new UsbCamera("Driver Cam", 1);
         driverCamera.setResolution(640, 480);
         
         CameraServer.getInstance().addCamera(driverCamera);
         CameraServer.getInstance().addCamera(turretCamera);
-        
-        /*
-        RobotMap.cameraOutputStream = new CvSource("Output", PixelFormat.kMJPEG, 640, 480, 30);
-        outputServer = new MjpegServer("serve_output", 12450);
-        outputServer.setSource(RobotMap.cameraOutputStream);
-        CameraServer.getInstance().addServer(outputServer);
-        */
 
         cvSink = CameraServer.getInstance().getVideo();
         
         //drivetrain.gyro.calibrate();
         visionThread = new Thread(() -> {
             while(!Thread.interrupted()){
-                /*if(cameraState > 2){
-                    cameraState = 0;
-                }
-                switch(cameraState){
-                case 0:
-                    outputServer.setSource(RobotMap.cameraOutputStream);
-                    break;
-                case 1:
-                    outputServer.setSource(driverCamera);
-                    break;
-                case 2:
-                    outputServer.setSource(turretCamera);
-                    break;
-                default:
-                    cameraState = 0;
-                    break;
-                }*/
                 switch(visionState){
                 case -1:
                     calibrateTurret();
